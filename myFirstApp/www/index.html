@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+	<!-- iPad/iPhone specific css below, add after your main css >
+	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
+	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
+	-->
+	<!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www directory and include it here -->
+	<script type="text/javascript" charset="utf-8" src="phonegap-1.0.0.js"></script>
+        
+        <script>
+            //wait for PhoneGap to load
+            document.addEventListener("deviceready", loaded, false);
+            
+            // PhoneGap is ready
+            function loaded() {
+                navigator.geolocation.getCurrentPosition(success, error);          
+                
+                startWatch();
+                
+                pictureSource=navigator.camera.PictureSourceType;
+                destinationType=navigator.camera.DestinationType;
+
+            }
+            
+            // Start watching the acceleration
+            
+            function startWatch() {
+                
+                // Update acceleration every 1 seconds
+                var options = { frequency: 1000 };
+                
+                watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+            }
+            
+            // Stop watching the acceleration
+            function stopWatch() {
+                if (watchID) {
+                    navigator.accelerometer.clearWatch(watchID);
+                    watchID = null;
+                }
+            }
+        
+            
+            // Success
+            function onSuccess(acceleration) {
+                var element = document.getElementById('accelerometer');
+                element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +
+                'Acceleration Y: ' + acceleration.y + '<br />' +
+                'Acceleration Z: ' + acceleration.z + '<br />' +
+                'Timestamp: '      + new Date(acceleration.timestamp) + '<br />';
+            }
+            
+            // Error
+            function onError() {
+                alert('onError!');
+            }
+            
+            var pictureSource,
+            destinationType
+            
+            
+            function getPhoto(imageData) {
+                var smallImage = document.getElementById('smallImage');
+                
+                smallImage.style.display = 'block';
+                
+                smallImage.src = "data:image/jpeg;base64," + imageData;
+            }
+            
+            function capturePhoto() {
+                navigator.camera.getPicture(getPhoto, onFail, { quality: 50, allowEdit: true });
+            }
+            
+            
+            function onFail(message) {
+                alert('Failed because ' + message);
+            }
+            
+            function success(position) {
+                var element = document.getElementById('geolocation');
+                element.innerHTML = 'This is my phone\'s location on earth <br />' +
+                'Latitude: '            + position.coords.latitude     + '<br />' +
+                'Longitude: '           + position.coords.longitude             + '<br />' +
+                'Altitude: '            + position.coords.altitude              + '<br />' +
+                'Accuracy: '            + position.coords.accuracy              + '<br />' +
+                'Altitude Accuracy: '   + position.coords.altitudeAccuracy      + '<br />' +
+                'Heading: '             + position.coords.heading               + '<br />' +
+                'Speed: '               + position.coords.speed                 + '<br />' +
+                'Timestamp: '           + new Date(position.timestamp)          + '<br />';
+            }
+            
+            function error(error) {
+                alert(error.message);
+            }
+            
+    </script>
+  </head>
+  <body onload="onBodyLoad()">
+
+      <h1> my first app! omg! </h1>
+      
+      <h2>accelerometer api</h2>
+        <div id="accelerometer">Waiting for accelerometer...</div>
+      <p></p>
+      
+      <h2>the fabu camera api with edit functionality</h2>
+      <button onclick="capturePhoto();">Capture Photo</button> <br>
+      <img style="display:none;width:160px;height:160px;" id="smallImage" src="" />
+      
+      <h2>geolocation API</h2>
+      <p id="geolocation">Finding geolocation...</p>
+  </body>
+</html>

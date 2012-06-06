@@ -1,0 +1,3 @@
+This is my first iPhone app with phone gap. It's built with HTML5, CSS3 and javascript. I am using the accelerometer API which lets me know the x, y, z coordinates of my phone. I am also using the camera API with edit functionality and geolocation api which lets people know where my phone is on earth. Right now, the geolocation API only shows me the latitude and longitude of my phone with a timestamp. 
+
+TODO: make the geolocation api to show the city, state and country where the phone is located.
